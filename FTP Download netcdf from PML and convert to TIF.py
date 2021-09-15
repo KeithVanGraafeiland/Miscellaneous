@@ -1,5 +1,6 @@
 import ftplib
 import shutil
+import arcpy
 
 #Downloads Chlorophyll netCDF files from the Plymouth Marine Lab FTP site
 ftp = ftplib.FTP('ftp.rsg.pml.ac.uk')
@@ -10,6 +11,7 @@ ftp.cwd(suburl + yeardownload)
 filenames = ftp.nlst()
 fileloc = 'E:/ChlorA/PML/5.0'
 #example fullurl = 'ftp://ftp.rsg.pml.ac.uk/occci-v4.2/geographic/netcdf/monthly/chlor_a/'
+arcpy.env.workspace = 'E:/ChlorA/PML/5.0/TIF'
 
 for filename in filenames:
 
@@ -19,5 +21,9 @@ for filename in filenames:
         file.close()
         shutil.move(filename, fileloc)
         print('Successfully downloaded.......... ', filename)
+        ras = "in_memory/ras"
+        print("Processing: " + filename)
+        arcpy.md.MakeNetCDFRasterLayer(fileloc + "\\" + filename, "chlor_a", "lon", "lat", ras, '', '', "BY_VALUE", "CENTER")
+        arcpy.Raster(ras).save("chlor_a_PML_v5_0_" + filename.split("-")[-2] + ".tif")
 print("Done Downloading!")
 ftp.quit()
