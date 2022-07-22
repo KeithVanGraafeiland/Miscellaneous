@@ -7,9 +7,9 @@ import os
 
 ftp = ftplib.FTP('ftp.star.nesdis.noaa.gov')
 ftp.login(user='anonymous', passwd = 'anonymous@')
-ftp.cwd('/pub/socd1/mecb/coastwatch/viirs/science/L3/global/chlora/anom/WW00/2020/')
+ftp.cwd('/pub/socd1/mecb/coastwatch/viirs/science/L3/global/chlora/anom/WW00/2022/')
 filenames = ftp.nlst()
-fileloc = 'C:/Users/keit8223/Downloads/NESDIS_ChlorA'
+fileloc = 'D:/ChlorA/NESDIS'
 #fullurl = 'ftp://ftp.star.nesdis.noaa.gov/pub/socd1/mecb/coastwatch/viirs/science/L3/global/chlora/anom/WW00/'
 
 for filename in filenames:
