@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 copernicus_credentials.py
+email_credentials.py
