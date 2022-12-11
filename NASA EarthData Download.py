@@ -1,55 +1,7 @@
-# #!/usr/bin/python
-# import requests # get the requsts library from https://github.com/requests/requests
-#
-# # overriding requests.Session.rebuild_auth to mantain headers when redirected
-# class SessionWithHeaderRedirection(requests.Session):
-#     AUTH_HOST = 'urs.earthdata.nasa.gov'
-#     def __init__(self, username, password):
-#         super().__init__()
-#         self.auth = (username, password)
-#
-#    # Overrides from the library to keep headers when redirected to or from
-#    # the NASA auth host.
-#
-#     def rebuild_auth(self, prepared_request, response):
-#         headers = prepared_request.headers
-#         url = prepared_request.url
-#         if 'Authorization' in headers:
-#             original_parsed = requests.utils.urlparse(response.request.url)
-#             redirect_parsed = requests.utils.urlparse(url)
-#             if (original_parsed.hostname != redirect_parsed.hostname) and \
-#                     redirect_parsed.hostname != self.AUTH_HOST and \
-#                     original_parsed.hostname != self.AUTH_HOST:
-#                 del headers['Authorization']
-#         return
-# # create session with the user credentials that will be used to authenticate access to the data
-# username = "USERNAME"
-# password= "PASSWORD"
-# session = SessionWithHeaderRedirection(username, password)
-# # the url of the file we wish to retrieve
-# url = "http://e4ftl01.cr.usgs.gov/MOLA/MYD17A3H.006/2009.01.01/MYD17A3H.A2009001.h12v05.006.2015198130546.hdf.xml"
-#
-# # extract the filename from the url to be used when saving the file
-# filename = url[url.rfind('/')+1:]
-#
-# try:
-#     # submit the request using the session
-#     response = session.get(url, stream=True)
-#     print(response.status_code)
-#     # raise an exception in case of http errors
-#     response.raise_for_status()
-#     # save the file
-#     with open(filename, 'wb') as fd:
-#         for chunk in response.iter_content(chunk_size=1024*1024):
-#             fd.write(chunk)
-#
-# except requests.exceptions.HTTPError as e:
-#
-#     # handle any errors here
-#     print(e)
-
-import requests # get the requsts library from https://github.com/requests/requests
-# overriding requests.Session.rebuild_auth to mantain headers when redirected
+import requests
+import os
+# get the requsts library from https://github.com/requests/requests
+# overriding requests.Session.rebuild_auth to maintain headers when redirected
 
 class SessionWithHeaderRedirection(requests.Session):
     AUTH_HOST = 'urs.earthdata.nasa.gov'
@@ -70,12 +22,12 @@ class SessionWithHeaderRedirection(requests.Session):
         return
 
 # create session with the user credentials that will be used to authenticate access to the data
-username = "xxxxx" #TODO replace with your Username
-password= "xxxxx" #TODO Replace with your password
+username = "xxxxxxxxxx" #TODO replace with your Username
+password= "xxxxxxxx" #TODO Replace with your password
 session = SessionWithHeaderRedirection(username, password)
 # the url of the file we wish to retrieve
 
-d_list = ["20000101",	"20000102",	"20000103",	"20000104",	"20000105",	"20000106",	"20000107",	"20000108",	"20000109",	"20000110",	"20000111",	"20000112",	"20000113",	"20000114",	"20000115",	"20000116",	"20000117",	"20000118",	"20000119",	"20000120",	"20000121",	"20000122",	"20000123",	"20000124",	"20000125",	"20000126",	"20000127",	"20000128",	"20000129",	"20000130",	"20000131"] #TODO Load list of dates to iterate through
+d_list = ["20020101", "20020102", "20020103", "20020104", "20020105", "20020106", "20020107", "20020108", "20020109", "20020110", "20020111", "20020112", "20020113", "20020114", "20020115", "20020116", "20020117", "20020118", "20020119", "20020120", "20020121", "20020122", "20020123", "20020124", "20020125", "20020126", "20020127", "20020128", "20020129", "20020130", "20020131", "20020201", "20020202", "20020203", "20020204", "20020205", "20020206", "20020207", "20020208", "20020209", "20020210", "20020211", "20020212", "20020213", "20020214", "20020215", "20020216", "20020217", "20020218", "20020219", "20020220", "20020221", "20020222", "20020223", "20020224", "20020225", "20020226", "20020227", "20020228", "20020229", "20020301", "20020302", "20020303", "20020304", "20020305", "20020306", "20020307", "20020308", "20020309", "20020310", "20020311", "20020312", "20020313", "20020314", "20020315", "20020316", "20020317", "20020318", "20020319", "20020320", "20020321", "20020322", "20020323", "20020324", "20020325", "20020326", "20020327", "20020328", "20020329", "20020330", "20020331", "20020401", "20020402", "20020403", "20020404", "20020405", "20020406", "20020407", "20020408", "20020409", "20020410", "20020411", "20020412", "20020413", "20020414", "20020415", "20020416", "20020417", "20020418", "20020419", "20020420", "20020421", "20020422", "20020423", "20020424", "20020425", "20020426", "20020427", "20020428", "20020429", "20020430", "20020501", "20020502", "20020503", "20020504", "20020505", "20020506", "20020507", "20020508", "20020509", "20020510", "20020511", "20020512", "20020513", "20020514", "20020515", "20020516", "20020517", "20020518", "20020519", "20020520", "20020521", "20020522", "20020523", "20020524", "20020525", "20020526", "20020527", "20020528", "20020529", "20020530", "20020531", "20020601", "20020602", "20020603", "20020604", "20020605", "20020606", "20020607", "20020608", "20020609", "20020610", "20020611", "20020612", "20020613", "20020614", "20020615", "20020616", "20020617", "20020618", "20020619", "20020620", "20020621", "20020622", "20020623", "20020624", "20020625", "20020626", "20020627", "20020628", "20020629", "20020630", "20020701", "20020702", "20020703", "20020704", "20020705", "20020706", "20020707", "20020708", "20020709", "20020710", "20020711", "20020712", "20020713", "20020714", "20020715", "20020716", "20020717", "20020718", "20020719", "20020720", "20020721", "20020722", "20020723", "20020724", "20020725", "20020726", "20020727", "20020728", "20020729", "20020730", "20020731", "20020801", "20020802", "20020803", "20020804", "20020805", "20020806", "20020807", "20020808", "20020809", "20020810", "20020811", "20020812", "20020813", "20020814", "20020815", "20020816", "20020817", "20020818", "20020819", "20020820", "20020821", "20020822", "20020823", "20020824", "20020825", "20020826", "20020827", "20020828", "20020829", "20020830", "20020831", "20020901", "20020902", "20020903", "20020904", "20020905", "20020906", "20020907", "20020908", "20020909", "20020910", "20020911", "20020912", "20020913", "20020914", "20020915", "20020916", "20020917", "20020918", "20020919", "20020920", "20020921", "20020922", "20020923", "20020924", "20020925", "20020926", "20020927", "20020928", "20020929", "20020930", "20020931", "20021001", "20021002", "20021003", "20021004", "20021005", "20021006", "20021007", "20021008", "20021009", "20021010", "20021011", "20021012", "20021013", "20021014", "20021015", "20021016", "20021017", "20021018", "20021019", "20021020", "20021021", "20021022", "20021023", "20021024", "20021025", "20021026", "20021027", "20021028", "20021029", "20021030", "20021031", "20021101", "20021102", "20021103", "20021104", "20021105", "20021106", "20021107", "20021108", "20021109", "20021110", "20021111", "20021112", "20021113", "20021114", "20021115", "20021116", "20021117", "20021118", "20021119", "20021120", "20021121", "20021122", "20021123", "20021124", "20021125", "20021126", "20021127", "20021128", "20021129", "20021130", "20021131", "20021201", "20021202", "20021203", "20021204", "20021205", "20021206", "20021207", "20021208", "20021209", "20021210", "20021211", "20021212", "20021213", "20021214", "20021215", "20021216", "20021217", "20021218", "20021219", "20021220", "20021221", "20021222", "20021223", "20021224", "20021225", "20021226", "20021227", "20021228", "20021229", "20021230", "20021231"] #TODO Load list of dates to iterate through
 output_path = "C:/temp/oscar/" # TODO Replace with the path on your computer to write the data to
 
 for d in d_list:
@@ -83,6 +35,9 @@ for d in d_list:
     url = "https://opendap.earthdata.nasa.gov/collections/C2098858642-POCLOUD/granules/oscar_currents_final_{date_string}.dap.nc4".format(date_string=d)
     # extract the filename from the url to be used when saving the file
     filename = url[url.rfind('/')+1:]
+    if os.path.exists(output_path + filename):
+        print("skipping " + filename)
+        continue
     print(filename)
 
     try:
