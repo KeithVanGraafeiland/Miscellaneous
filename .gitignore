@@ -130,3 +130,5 @@ dmypy.json
 
 copernicus_credentials.py
 email_credentials.py
+PML_Credentials.py
+EarthData_Credentials.py
