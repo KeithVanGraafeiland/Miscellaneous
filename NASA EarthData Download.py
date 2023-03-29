@@ -1,6 +1,7 @@
 import requests
 import os
 from EarthData_Credentials import EDusername, EDpassword
+from datetime import date, timedelta
 # get the requsts library from https://github.com/requests/requests
 # overriding requests.Session.rebuild_auth to maintain headers when redirected
 
@@ -28,7 +29,19 @@ password= EDpassword #TODO Replace with your password
 session = SessionWithHeaderRedirection(username, password)
 # the url of the file we wish to retrieve
 
-d_list = ["20220101"] #TODO Load list of dates to iterate through
+start_date = date(2022, 1, 15) #TODO replace with your Start Date
+end_date = date(2022, 2, 15) #TODO replace with your End Date
+delta = end_date - start_date   # returns timedelta
+date_list = []
+
+for i in range(delta.days + 1):
+    day = start_date + timedelta(days=i)
+    date = day.strftime("%Y%m%d")
+    # print(date)
+    date_list.append(date)
+# print(date_list)
+
+d_list = date_list #TODO Load list of dates to iterate through
 output_path = "C:/temp/oscar/" #TODO Replace with the path on your computer to write the data to
 
 for d in d_list:
